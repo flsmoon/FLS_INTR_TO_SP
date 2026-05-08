@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить привычку{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>Новая привычка</h1>
+</section>
+
+<form class="form-card" action="{{ url_for('add_habit') }}" method="post">
+    <label class="form-label" for="title">Название привычки</label>
+    <input class="form-input" type="text" id="title" name="title" placeholder="Например: Читать 20 минут каждый день"
+        required maxlength="200" autofocus>
+
+    <div class="form-actions">
+        <a class="btn btn-ghost" href="{{ url_for('index') }}">Отмена</a>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </div>
+</form>
+{% endblock %}

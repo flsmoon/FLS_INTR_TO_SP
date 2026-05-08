@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>Статистика</h1>
+</section>
+<!-- Общая сводка по всем привычкам -->
+<div class="summary-grid">
+    <div class="summary-card">
+        <span class="summary-value">{{ summary.habits_count }}</span>
+        <span class="summary-label">привычек</span>
+    </div>
+    <div class="summary-card">
+        <span class="summary-value">{{ summary.total_completions }}</span>
+        <span class="summary-label">выполнений всего</span>
+    </div>
+    <div class="summary-card">
+        <span class="summary-value">{{ summary.best_streak }}</span>
+        <span class="summary-label">лучший streak</span>
+    </div>
+</div>
+
+<!-- Детальная таблица по каждой привычке -->
+{% if habits %}
+<div class="table-wrap">
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Цветок</th>
+                <th>Привычка</th>
+                <th>Создана</th>
+                <th>Streak</th>
+                <th>Всего</th>
+                <th>Сегодня</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habit in habits %}
+            <tr>
+                <td class="cell-flower">{{ habit.flower }}</td>
+                <td>{{ habit.title }}</td>
+                <td>{{ habit.created_at }}</td>
+                <td>{{ habit.streak }}</td>
+                <td>{{ habit.total }}</td>
+                <td>
+                    {% if habit.done_today %}
+                    <span class="badge badge-done">✓</span>
+                    {% else %}
+                    <span class="badge badge-todo">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p class="empty-icon">📊</p>
+    <h2>Ещё нет данных для статистики</h2>
+    <p>Добавьте привычку и начните отмечать выполнения.</p>
+    <a class="btn btn-primary" href="{{ url_for('add_habit') }}">Добавить привычку</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Мои привычки{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>Мои привычки</h1>
+    <a class="btn btn-primary" href="{{ url_for('add_habit') }}">+ Новая привычка</a>
+</section>
+
+{% if habits %}
+<div class="habits-grid">
+    {% for habit in habits %}
+    <article class="habit-card {% if habit.done_today %}is-done{% endif %}">
+        <div class="habit-flower" title="Стадия роста: {{ habit.streak }} дн.">
+            {{ habit.flower }}
+        </div>
+
+        <h2 class="habit-title">{{ habit.title }}</h2>
+
+        <div class="habit-stats">
+            <div class="stat">
+                <span class="stat-value">{{ habit.streak }}</span>
+                <span class="stat-label">дней подряд</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">{{ habit.total }}</span>
+                <span class="stat-label">всего</span>
+            </div>
+        </div>
+
+        <div class="habit-actions">
+            <form action="{{ url_for('complete_habit', habit_id=habit.id) }}" method="post">
+                {% if habit.done_today %}
+                <button type="button" class="btn btn-success" disabled>
+                    ✓ Выполнено сегодня
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-primary">
+                    Выполнено
+                </button>
+                {% endif %}
+            </form>
+            <form action="{{ url_for('delete_habit', habit_id=habit.id) }}" method="post" class="js-delete-form">
+                <button type="submit" class="btn btn-ghost">Удалить</button>
+            </form>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p class="empty-icon">🌱</p>
+    <h2>Пока нет ни одной привычки</h2>
+    <p>Добавьте первую — например, «Читать 20 минут каждый день».</p>
+    <a class="btn btn-primary" href="{{ url_for('add_habit') }}">Добавить привычку</a>
+</div>
+{% endif %}
+{% endblock %}
