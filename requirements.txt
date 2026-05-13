@@ -1,1 +1,4 @@
 Flask==3.0.3
+black
+flake8
+pytest
