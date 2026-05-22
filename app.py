@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(BASE_DIR, "habits.db")
+DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "habits.db"))
 SCHEMA_PATH = os.path.join(BASE_DIR, "database", "schema.sql")
 
 
@@ -25,6 +25,9 @@ def init_db():
     conn.executescript(schema_sql)
     conn.commit()
     conn.close()
+
+
+init_db()
 
 
 def calculate_streak(habit_id):
@@ -187,5 +190,4 @@ def stats():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run()
