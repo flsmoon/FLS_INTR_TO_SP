@@ -28,7 +28,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Инициализируем БД при загрузке модуля (необходимо для Gunicorn)
+
 init_db()
 
 
