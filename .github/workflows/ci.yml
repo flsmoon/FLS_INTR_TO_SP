@@ -1,12 +1,16 @@
 name: Myfirst CI
+
 on:
   push:
     branches:
       - main
   pull_request:
+
 jobs:
   check-code:
-    runs-on: ubuntu-latest
+    name: check-code
+    runs-on: ubuntu-24.04
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -14,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -29,3 +33,40 @@ jobs:
 
       - name: Run tests with pytest
         run: pytest
+
+  docker-check:
+    name: docker-check
+    runs-on: ubuntu-24.04
+    needs: check-code
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t habit-tracker .
+
+      - name: Run container
+        run: |
+          docker run -d \
+            -p 8080:5000 \
+            --name habits-test \
+            habit-tracker
+
+      - name: Wait for app to start
+        run: sleep 5
+
+      - name: Show running containers
+        run: docker ps
+
+      - name: Check app is reachable
+        run: curl -f http://localhost:8080
+
+      - name: Show container logs
+        run: docker logs habits-test
+
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop habits-test || true
+          docker rm habits-test   || true
