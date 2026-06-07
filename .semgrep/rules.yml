@@ -1,0 +1,24 @@
+rules:
+  - id: flask-run-without-debug-false
+    patterns:
+      - pattern: $APP.run()
+    message: >
+      app.run() without debug=False can expose the Werkzeug interactive debugger
+      in production, allowing arbitrary code execution on the server.
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      cwe: CWE-94
+
+  - id: flask-hardcoded-secret-key
+    pattern: $APP.secret_key = "..."
+    message: >
+      SECRET_KEY is hardcoded. A predictable or leaked secret key allows
+      attackers to forge session cookies and impersonate any user.
+      Use os.environ.get() instead.
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      cwe: CWE-798
