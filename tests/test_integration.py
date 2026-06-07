@@ -1,10 +1,10 @@
 def test_full_flow(client):
     client.post("/add", data={"title": "Спорт"})
-    r=client.get("/")
+    r = client.get("/")
     assert "Спорт" in r.data.decode("utf-8")
     client.post("/complete/1")
-    r2=client.get("/stats")
+    r2 = client.get("/stats")
     assert "Спорт" in r2.data.decode("utf-8")
     client.post("/delete/1")
-    r3=client.get("/")
+    r3 = client.get("/")
     assert "Спорт" not in r3.data.decode("utf-8")
