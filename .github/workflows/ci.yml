@@ -34,10 +34,24 @@ jobs:
       - name: Run tests with pytest
         run: pytest --cov=app --cov-report=term-missing -v
 
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-24.04
+    needs: check-code
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run semgrep
+        run: |
+          pip install semgrep
+          semgrep --config=.semgrep/rules.yml --error app.py
+
   docker-check:
     name: docker-check
     runs-on: ubuntu-24.04
-    needs: check-code
+    needs: [check-code, semgrep]
 
     steps:
       - name: Checkout repository

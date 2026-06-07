@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "dev")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "habits.db"))
 SCHEMA_PATH = os.path.join(BASE_DIR, "database", "schema.sql")
@@ -190,4 +191,4 @@ def stats():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=False)
